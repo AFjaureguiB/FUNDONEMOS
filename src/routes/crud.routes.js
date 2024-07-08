@@ -1,15 +1,22 @@
 import { Router } from "express"
+import {
+  getAllInfo,
+  getInfo,
+  updateInfo,
+  createInfo,
+  deleteInfo,
+} from "../controllers/crud.controller.js"
 
 const router = Router()
 
-router.get("/crud", (req, res) => res.send("Getting Info"))
+router.get("/crud", getAllInfo)
 
-router.get("/crud/:id", (req, res) => res.send("Getting unique Info"))
+router.get("/crud/:id", getInfo)
 
-router.post("/crud", (req, res) => res.send("Creating Info"))
+router.post("/crud", createInfo)
 
-router.put("/crud/:id", (req, res) => res.send("Updating unique Info"))
+router.put("/crud/:id", updateInfo)
 
-router.delete("/crud/:id", (req, res) => res.send("Deleting Info"))
+router.delete("/crud/:id", deleteInfo)
 
 export default router
