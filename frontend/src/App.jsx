@@ -5,6 +5,8 @@ import Loginpage from "./pages/LoginPage"
 import Registerpage from "./pages/RegisterPage"
 import Menupage from "./pages/MenuPage"
 import Profilepage from "./pages/ProfilePage"
+import NotFound from "./pages/NotFound"
+
 
 
 
@@ -14,11 +16,12 @@ function App () {
       <Route path= "/" element = {<HomePage/>} />
       <Route path= "/about" element = {<AboutPage/>} />
       <Route path= "/Login" element = {<Loginpage/>} />
-      <Route path= "/Register" element = {<Registerpage/>} />
+      <Route path= "/MasterAdmin/Register" element = {<Registerpage/>} />
 
 
       <Route path= "/Menu" element = {<Menupage/>} />
       <Route path= "/Profile" element = {<Profilepage/>} />
+      <Route path= "*" element={<NotFound />}/>
     </Routes>
   )
 }
