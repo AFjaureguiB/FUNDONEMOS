@@ -10,12 +10,14 @@ import { useAuth } from "../context/AuthContext"
 function Registerpage(){
 
     const { register, handleSubmit, formState: {errors}, } = useForm()
-    const {signup} = useAuth()
+    const {signup, errors: signupErrors} = useAuth()
     const navigate = useNavigate()
 
     const onSubmit = handleSubmit( async (data) => {
-          await signup(data)
-          navigate("/profile")
+       const user = await signup(data)
+       if (user){
+        navigate("/profile")
+       }
     })
 
 
@@ -24,7 +26,14 @@ function Registerpage(){
           <div className="flex items-center justify-between w-9/10">            
             <img src="/logoFHD.png" className="w-1/2 h-auto object-contain mr-1" />            
             <Card className="flex flex-col items-center justify-center w-1/2 ">
-              <h3 className="text-2xl font-sans text-white mb-6 text-center">REGISTER</h3>
+
+              {signupErrors &&
+                signupErrors.map((err, index) => (
+                <p key={index} className="bg-red-500 text-white p-2 text-center">{err}</p>
+              ))
+              }
+
+              <h1 className="text-2xl font-sans text-white mb-6 text-center">REGISTER</h1>
               <form onSubmit={onSubmit} className="w-full flex flex-col items-center" >
                 <Input placeholder="Username" {...register("username", {required: true})}/>
                 {

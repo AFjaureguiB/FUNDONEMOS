@@ -8,12 +8,15 @@ import { useAuth } from "../context/AuthContext"
 function Loginpage(){
 
     const { register, handleSubmit, formState: {errors}, } = useForm()
-    const {signin} = useAuth()
+    const {signin, errors: loginErrors} = useAuth()
     const navigate = useNavigate()
 
     const onSubmit = handleSubmit( async (data) => {
-       await signin(data)
-       navigate("/profile")     
+       const user = await signin(data)
+       if(user){
+        navigate("/profile")  
+
+       }  
     })
 
 
@@ -23,7 +26,12 @@ function Loginpage(){
           <div className="flex items-center justify-between w-9/10">           
             <img src="/logoFHD.png" className="w-1/2 h-auto object-contain mr-1" />            
             <Card className="flex flex-col items-center justify-center w-1/2 ">
-              <h3 className="text-2xl font-sans text-white mb-6 text-center">LOGIN</h3>
+              {loginErrors &&
+              loginErrors.map((err, index) => (
+                <p key={index} className="bg-red-500 text-white p-2 text-center">{err}</p>
+              ))
+              }
+              <h1 className="text-2xl font-sans text-white mb-6 text-center">LOGIN</h1>
               <form onSubmit={onSubmit} className="w-full flex flex-col items-center" >
                 <Input placeholder="Username" {...register("username", {required: true})}/>
                 {

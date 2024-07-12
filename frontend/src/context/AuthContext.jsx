@@ -1,5 +1,7 @@
-import {createContext, useContext, useState} from "react";
-import axios from "axios";
+import {createContext, useContext, useState, useEffect } from "react";
+import axios from "../api/axios";
+import Cookie from "js-cookie"
+
 
 export const AuthContext = createContext()
 
@@ -20,21 +22,62 @@ export function AuthProvider({children}){
 
     const signin = async (data) => {
         
-        const res = await axios.post("http://localhost:3000/api/signin", data, {withCredentials: true})        
-        console.log(res.data) 
-        setUser (res.data)
+        try{
+            const res = await axios.post("/signin", data)        
+            
+            setUser (res.data)
+            setIsAuth(true)
+            return res.data
+
+        }catch (error){
+
+            if(Array.isArray(error.response.data)){                
+                return setErrors(error.response.data)
+            }
+
+            setErrors([error.response.data.message])
+        
+        }
     }
 
     const signup = async (data) => {
-        const res = await axios.post("http://localhost:3000/api/signup", data, {withCredentials: true})
-        console.log(res.data)
-        setUser (res.data)
+        try{
+            const res = await axios.post("/signup", data)        
+            setUser (res.data)
+            setIsAuth(true)
+            return res.data
+
+        }catch (error){
+            if(Array.isArray(error.response.data)){                
+                return setErrors(error.response.data)
+            }
+
+            setErrors([error.response.data.message])
+        
+        }
     }
 
+    useEffect(()=> {
+        if(Cookie.get("token")){
+            axios.get("/profile")
+            .then(res =>{
+               setUser(res.data);
+               setIsAuth(true);
+            })
+            .catch(err => {
+                console.log(err)
+                setUser(null)
+                setIsAuth(false)
+            })
+        }
+    },[])
+    
 
-    return <AuthContext.Provider value={{user,isAuth,errors,signup, signin}}>
+
+    return(<AuthContext.Provider value={{user,isAuth,errors,signup, signin}}>
         {children}
-    </AuthContext.Provider>
+    </AuthContext.Provider>)
 }
+
 
 export default AuthProvider
